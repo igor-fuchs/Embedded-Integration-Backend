@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Server.Web</RootNamespace>
+    <RootNamespace>Server.Presentation</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
