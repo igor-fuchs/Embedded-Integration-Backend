@@ -1,14 +1,16 @@
 namespace Infrastructure.Services;
 
-using Application.Interfaces;
+using Domain.Interfaces;
 using Domain.DTOs;
 using Microsoft.Extensions.Caching.Memory;
+using System.Text.Json;
 
 public class NodeOpcuaService : INodeOpcuaService
 {
     private readonly IMemoryCache _cache;
     private const string CacheKeyPrefix = "opcua_node_";
     private const string AllNodesKey = "opcua_all_nodes";
+    private const int MaxNodes = 100;
 
     public NodeOpcuaService(IMemoryCache cache)
     {
@@ -55,22 +57,29 @@ public class NodeOpcuaService : INodeOpcuaService
     /// </summary>
     /// <param name="name">OPC UA node name</param>
     /// <param name="value">OPC UA node value</param>
-    public NodeOpcuaDto SetNode(string name, object value)
+    /// <exception cref="InvalidOperationException">Thrown when max node limit is reached</exception>
+    public NodeOpcuaDto SetNode(string name, JsonElement value)
     {
-        var node = new NodeOpcuaDto(name, value);
-        var cacheKey = GetCacheKey(name);
-
-        var cacheOptions = new MemoryCacheEntryOptions()
-            .SetSlidingExpiration(TimeSpan.FromMinutes(30));
-
-        _cache.Set(cacheKey, node, cacheOptions);
-
-        // Track node names for GetAllNodes
         var nodeNames = _cache.GetOrCreate(AllNodesKey, entry =>
         {
             entry.SlidingExpiration = TimeSpan.FromHours(1);
             return new HashSet<string>();
         }) ?? new HashSet<string>();
+
+        // Check max nodes limit
+        if (!nodeNames.Contains(name) && nodeNames.Count >= MaxNodes)
+        {
+            throw new InvalidOperationException($"Maximum number of nodes ({MaxNodes}) reached. Cannot create new nodes.");
+        }
+
+        var node = new NodeOpcuaDto(name, value);
+        var cacheKey = GetCacheKey(name);
+
+        var cacheOptions = new MemoryCacheEntryOptions()
+            .SetSlidingExpiration(TimeSpan.FromMinutes(30))
+            .SetSize(1);  // Define size for cache control
+
+        _cache.Set(cacheKey, node, cacheOptions);
 
         nodeNames.Add(name);
         _cache.Set(AllNodesKey, nodeNames);

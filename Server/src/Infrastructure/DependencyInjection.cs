@@ -1,6 +1,6 @@
 namespace Infrastructure;
 
-using Application.Interfaces;
+using Domain.Interfaces;
 using Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 
