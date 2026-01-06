@@ -1,14 +1,9 @@
-// Eu preciso contruir as APIs
-// o que eu preciso para construir apis?
-// eu preciso de um servidor web
-// como eu crio um servidor web?
-// eu posso usar o ASP.NET Core para criar um servidor web
-
-// Eu preciso descobrir como armazenar os dados dinamicamente e depois envia-los para um database
+using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddInfrastructure();
 
 var app = builder.Build();
 
