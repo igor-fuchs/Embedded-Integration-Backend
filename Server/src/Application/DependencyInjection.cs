@@ -1,5 +1,7 @@
 namespace Application;
 
+using Application.Interfaces;
+using Application.Services;
 using Application.Validators;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,8 +10,11 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        // Register all validators from the Application assembly (only need one call)
+        // Register validators
         services.AddValidatorsFromAssemblyContaining<CreateNodeRequestValidator>();
+
+        // Register application services
+        services.AddScoped<IOpcuaNodeService, OpcuaNodeService>();
 
         return services;
     }

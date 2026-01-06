@@ -1,7 +1,7 @@
 namespace Infrastructure;
 
-using Domain.Interfaces;
-using Infrastructure.Services;
+using Application.Interfaces;
+using Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 public static class DependencyInjection
@@ -9,7 +9,7 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
         services.AddMemoryCache();
-        services.AddSingleton<INodeOpcuaService, NodeOpcuaService>();
+        services.AddSingleton<IOpcuaNodeRepository, OpcuaNodeCacheRepository>();
 
         return services;
     }
