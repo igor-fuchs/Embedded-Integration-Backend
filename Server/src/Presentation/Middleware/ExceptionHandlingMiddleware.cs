@@ -4,6 +4,7 @@ using Domain.Exceptions;
 using FluentValidation;
 using System.Net;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 /// <summary>
 /// Global exception handling middleware.
@@ -49,7 +50,8 @@ public sealed class ExceptionHandlingMiddleware
 
         var json = JsonSerializer.Serialize(response, new JsonSerializerOptions
         {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull // Ignore null values
         });
 
         await context.Response.WriteAsync(json);

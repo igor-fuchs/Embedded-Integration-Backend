@@ -12,11 +12,13 @@ using Domain.Exceptions;
 public sealed class OpcuaNodeService : IOpcuaNodeService
 {
     private readonly IOpcuaNodeRepository _repository;
+    private readonly IValidationService _validator;
     private const int MaxNodes = 100;
 
-    public OpcuaNodeService(IOpcuaNodeRepository repository)
+    public OpcuaNodeService(IOpcuaNodeRepository repository, IValidationService validator)
     {
         _repository = repository;
+        _validator = validator;
     }
 
     public async Task<NodeListResponse> GetAllNodesAsync(CancellationToken cancellationToken = default)
@@ -39,6 +41,9 @@ public sealed class OpcuaNodeService : IOpcuaNodeService
 
     public async Task<NodeResponse> CreateNodeAsync(CreateNodeRequest request, CancellationToken cancellationToken = default)
     {
+        // Validate request
+        await _validator.ValidateAsync(request, cancellationToken);
+
         // Check if node already exists
         if (await _repository.ExistsAsync(request.Name, cancellationToken))
         {
@@ -62,6 +67,9 @@ public sealed class OpcuaNodeService : IOpcuaNodeService
 
     public async Task<NodeResponse> UpdateNodeAsync(string name, UpdateNodeRequest request, CancellationToken cancellationToken = default)
     {
+        // Validate request
+        await _validator.ValidateAsync(request, cancellationToken);
+
         var node = await _repository.GetByNameAsync(name, cancellationToken);
         
         if (node is null)

@@ -13,6 +13,9 @@ public static class DependencyInjection
         // Register validators
         services.AddValidatorsFromAssemblyContaining<CreateNodeRequestValidator>();
 
+        // Register validation service
+        services.AddScoped<IValidationService, ValidationService>();
+
         // Register application services
         services.AddScoped<IOpcuaNodeService, OpcuaNodeService>();
 
