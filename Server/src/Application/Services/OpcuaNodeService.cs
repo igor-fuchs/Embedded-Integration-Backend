@@ -13,12 +13,17 @@ public sealed class OpcuaNodeService : IOpcuaNodeService
 {
     private readonly IOpcuaNodeRepository _repository;
     private readonly IValidationService _validator;
+    private readonly IOpcuaNodeNotificationService _notificationService;
     private const int MaxNodes = 100;
 
-    public OpcuaNodeService(IOpcuaNodeRepository repository, IValidationService validator)
+    public OpcuaNodeService(
+        IOpcuaNodeRepository repository,
+        IValidationService validator,
+        IOpcuaNodeNotificationService notificationService)
     {
         _repository = repository;
         _validator = validator;
+        _notificationService = notificationService;
     }
 
     public async Task<NodeListResponse> GetAllNodesAsync(CancellationToken cancellationToken = default)
@@ -62,7 +67,12 @@ public sealed class OpcuaNodeService : IOpcuaNodeService
         
         await _repository.AddAsync(node, cancellationToken);
 
-        return NodeResponse.FromEntity(node);
+        var response = NodeResponse.FromEntity(node);
+        
+        // Notify connected clients
+        await _notificationService.NotifyNodeCreatedAsync(response, cancellationToken);
+
+        return response;
     }
 
     public async Task<NodeResponse> UpdateNodeAsync(string name, UpdateNodeRequest request, CancellationToken cancellationToken = default)
@@ -81,7 +91,12 @@ public sealed class OpcuaNodeService : IOpcuaNodeService
         
         await _repository.UpdateAsync(node, cancellationToken);
 
-        return NodeResponse.FromEntity(node);
+        var response = NodeResponse.FromEntity(node);
+        
+        // Notify connected clients
+        await _notificationService.NotifyNodeUpdatedAsync(response, cancellationToken);
+
+        return response;
     }
 
     public async Task DeleteNodeAsync(string name, CancellationToken cancellationToken = default)
@@ -92,5 +107,8 @@ public sealed class OpcuaNodeService : IOpcuaNodeService
         {
             throw new NotFoundException("Node", name);
         }
+
+        // Notify connected clients
+        await _notificationService.NotifyNodeDeletedAsync(name, cancellationToken);
     }
 }

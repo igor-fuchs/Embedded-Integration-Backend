@@ -1,31 +1,31 @@
 using Application;
 using Infrastructure;
+using Presentation;
+using Presentation.Hubs;
 using Presentation.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services
-builder.Services.AddControllers();
+builder.Services.AddPresentation();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
 
-// Add CORS
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
         policy.AllowAnyOrigin()
               .AllowAnyMethod()
-              .AllowAnyHeader();
+              .AllowAnyHeader()
+              .AllowCredentials();
     });
 });
 
 var app = builder.Build();
 
-// Middleware
-app.UseExceptionHandling();
-
+app.UseMiddlewares();
 app.UseCors();
 app.MapControllers();
+app.MapHubs();
 
 app.Run();

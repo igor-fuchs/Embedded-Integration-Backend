@@ -97,14 +97,3 @@ public sealed class ErrorResponse
     public required string Message { get; init; }
     public List<string>? Errors { get; init; }
 }
-
-/// <summary>
-/// Extension methods for exception handling middleware.
-/// </summary>
-public static class ExceptionHandlingMiddlewareExtensions
-{
-    public static IApplicationBuilder UseExceptionHandling(this IApplicationBuilder app)
-    {
-        return app.UseMiddleware<ExceptionHandlingMiddleware>();
-    }
-}
