@@ -5,11 +5,9 @@ namespace Presentation.Hubs;
 /// </summary>
 public static class OpcuaNodeHubExtensions
 {
-    public static IApplicationBuilder MapHubs(this IApplicationBuilder app)
+    public static WebApplication MapHubs(this WebApplication app)
     {
-        return app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapHub<OpcuaNodeHub>("/hubs/opcua-nodes");
-        });
+        app.MapHub<OpcuaNodeHub>("/hubs/opcua-nodes");
+        return app;
     }
 }
