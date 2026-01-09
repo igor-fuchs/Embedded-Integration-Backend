@@ -21,4 +21,10 @@ public interface IOpcuaNodeHubClient
     /// Called when a node is deleted.
     /// </summary>
     Task NodeDeleted(string nodeName);
+
+    /// <summary>
+    /// Called when a separator station node is updated.
+    /// This is sent only to clients subscribed to the SimulationFront group.
+    /// </summary>
+    Task SimulationFrontNodeUpdated(NodeResponse node);
 }

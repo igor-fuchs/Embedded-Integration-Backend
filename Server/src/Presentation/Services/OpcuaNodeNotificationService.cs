@@ -2,6 +2,7 @@ namespace Presentation.Services;
 
 using Application.DTOs.Responses;
 using Application.Interfaces;
+using Domain.Constants;
 using Microsoft.AspNetCore.SignalR;
 using Presentation.Hubs;
 
@@ -22,23 +23,14 @@ public sealed class OpcuaNodeNotificationService : IOpcuaNodeNotificationService
     }
 
     /// <inheritdoc/>
-    public async Task NotifyNodeCreatedAsync(NodeResponse node, CancellationToken cancellationToken = default)
+    public async Task NotifySimulationFrontNodeAsync(NodeResponse node, CancellationToken cancellationToken = default)
     {
-        _logger.LogDebug("Notifying clients of node creation: {NodeName}", node.Name);
-        await _hubContext.Clients.All.NodeCreated(node);
-    }
+        _logger.LogDebug(
+            "Notifying SimulationFront group of node update: ({NodeName})",
+            node.Name);
 
-    /// <inheritdoc/>
-    public async Task NotifyNodeUpdatedAsync(NodeResponse node, CancellationToken cancellationToken = default)
-    {
-        _logger.LogDebug("Notifying clients of node update: {NodeName}", node.Name);
-        await _hubContext.Clients.All.NodeUpdated(node);
-    }
-
-    /// <inheritdoc/>
-    public async Task NotifyNodeDeletedAsync(string nodeName, CancellationToken cancellationToken = default)
-    {
-        _logger.LogDebug("Notifying clients of node deletion: {NodeName}", nodeName);
-        await _hubContext.Clients.All.NodeDeleted(nodeName);
+        await _hubContext.Clients
+            .Group(SimulationFrontNodeIds.GroupName)
+            .SimulationFrontNodeUpdated(node);
     }
 }

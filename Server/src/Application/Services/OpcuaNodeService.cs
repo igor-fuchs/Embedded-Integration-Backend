@@ -5,6 +5,7 @@ using Application.DTOs.Responses;
 using Application.Interfaces;
 using Domain.Entities;
 using Domain.Exceptions;
+using Domain.Constants;
 
 /// <summary>
 /// Application service for OPC UA node operations.
@@ -35,7 +36,7 @@ public sealed class OpcuaNodeService : IOpcuaNodeService
     public async Task<NodeResponse> GetNodeByNameAsync(string name, CancellationToken cancellationToken = default)
     {
         var node = await _repository.GetByNameAsync(name, cancellationToken);
-        
+
         if (node is null)
         {
             throw new NotFoundException("Node", name);
@@ -64,13 +65,16 @@ public sealed class OpcuaNodeService : IOpcuaNodeService
 
         // Create domain entity
         var node = OpcuaNode.Create(request.Name, request.Value);
-        
+
         await _repository.AddAsync(node, cancellationToken);
 
         var response = NodeResponse.FromEntity(node);
-        
-        // Notify connected clients
-        await _notificationService.NotifyNodeCreatedAsync(response, cancellationToken);
+
+        // Notify connected group clients
+        if (SimulationFrontNodeIds.IsSimulationFrontNode(node.Name))
+        {
+            await _notificationService.NotifySimulationFrontNodeAsync(response, cancellationToken);
+        }
 
         return response;
     }
@@ -81,20 +85,23 @@ public sealed class OpcuaNodeService : IOpcuaNodeService
         await _validator.ValidateAsync(request, cancellationToken);
 
         var node = await _repository.GetByNameAsync(name, cancellationToken);
-        
+
         if (node is null)
         {
             throw new NotFoundException("Node", name);
         }
 
         node.UpdateValue(request.Value);
-        
+
         await _repository.UpdateAsync(node, cancellationToken);
 
         var response = NodeResponse.FromEntity(node);
-        
-        // Notify connected clients
-        await _notificationService.NotifyNodeUpdatedAsync(response, cancellationToken);
+
+        // Notify connected group clients
+        if (SimulationFrontNodeIds.IsSimulationFrontNode(node.Name))
+        {
+            await _notificationService.NotifySimulationFrontNodeAsync(response, cancellationToken);
+        }
 
         return response;
     }
@@ -102,13 +109,11 @@ public sealed class OpcuaNodeService : IOpcuaNodeService
     public async Task DeleteNodeAsync(string name, CancellationToken cancellationToken = default)
     {
         var removed = await _repository.RemoveAsync(name, cancellationToken);
-        
+
         if (!removed)
         {
             throw new NotFoundException("Node", name);
         }
 
-        // Notify connected clients
-        await _notificationService.NotifyNodeDeletedAsync(name, cancellationToken);
     }
 }

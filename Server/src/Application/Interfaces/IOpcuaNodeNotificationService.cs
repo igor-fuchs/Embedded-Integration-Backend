@@ -8,23 +8,9 @@ using Application.DTOs.Responses;
 public interface IOpcuaNodeNotificationService
 {
     /// <summary>
-    /// Notifies all connected clients that a new node was created.
+    /// Notifies clients subscribed to the SimulationFront group that a node was created or updated.
     /// </summary>
-    /// <param name="node">The created node data.</param>
+    /// <param name="node">The created or updated simulation front node data.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    Task NotifyNodeCreatedAsync(NodeResponse node, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Notifies all connected clients that a node was updated.
-    /// </summary>
-    /// <param name="node">The updated node data.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    Task NotifyNodeUpdatedAsync(NodeResponse node, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Notifies all connected clients that a node was deleted.
-    /// </summary>
-    /// <param name="nodeName">The name of the deleted node.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    Task NotifyNodeDeletedAsync(string nodeName, CancellationToken cancellationToken = default);
+    Task NotifySimulationFrontNodeAsync(NodeResponse node, CancellationToken cancellationToken = default);
 }
