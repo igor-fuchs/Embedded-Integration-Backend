@@ -10,10 +10,14 @@ using Microsoft.AspNetCore.SignalR;
 public sealed class OpcuaNodeHub : Hub<IOpcuaNodeHubClient>
 {
     private readonly ILogger<OpcuaNodeHub> _logger;
+    private readonly IOpcuaNodeNotificationService _notificationService;
 
-    public OpcuaNodeHub(ILogger<OpcuaNodeHub> logger)
+    public OpcuaNodeHub(
+        ILogger<OpcuaNodeHub> logger,
+        IOpcuaNodeNotificationService notificationService)
     {
         _logger = logger;
+        _notificationService = notificationService;
     }
 
     public override async Task OnConnectedAsync()
@@ -30,6 +34,7 @@ public sealed class OpcuaNodeHub : Hub<IOpcuaNodeHubClient>
 
     /// <summary>
     /// Subscribes the current client to the Separator Station group to receive updates.
+    /// Sends the initial state of all nodes upon subscription.
     /// </summary>
     public async Task SubscribeToSimulationFront()
     {
@@ -38,6 +43,15 @@ public sealed class OpcuaNodeHub : Hub<IOpcuaNodeHubClient>
             "Client {ConnectionId} subscribed to {GroupName} group",
             Context.ConnectionId,
             SimulationFrontNodeIds.GroupName);
+
+        // Send initial state to the newly subscribed client
+        var initialState = await _notificationService.GetSimulationFrontInitialStateAsync();
+        await Clients.Caller.SimulationFrontInitialState(initialState);
+        
+        _logger.LogDebug(
+            "Sent initial state to client {ConnectionId}: {NodeCount} nodes",
+            Context.ConnectionId,
+            initialState.Count);
     }
 
     /// <summary>

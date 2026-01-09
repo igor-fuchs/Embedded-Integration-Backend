@@ -12,13 +12,16 @@ using Presentation.Hubs;
 public sealed class OpcuaNodeNotificationService : IOpcuaNodeNotificationService
 {
     private readonly IHubContext<OpcuaNodeHub, IOpcuaNodeHubClient> _hubContext;
+    private readonly IOpcuaNodeRepository _repository;
     private readonly ILogger<OpcuaNodeNotificationService> _logger;
 
     public OpcuaNodeNotificationService(
         IHubContext<OpcuaNodeHub, IOpcuaNodeHubClient> hubContext,
+        IOpcuaNodeRepository repository,
         ILogger<OpcuaNodeNotificationService> logger)
     {
         _hubContext = hubContext;
+        _repository = repository;
         _logger = logger;
     }
 
@@ -37,5 +40,27 @@ public sealed class OpcuaNodeNotificationService : IOpcuaNodeNotificationService
         await _hubContext.Clients
             .Group(SimulationFrontNodeIds.GroupName)
             .SimulationFrontNode(response);
+    }
+
+    /// <inheritdoc/>
+    public async Task<IReadOnlyList<NullableNodeResponse>> GetSimulationFrontInitialStateAsync(CancellationToken cancellationToken = default)
+    {
+        var result = new List<NullableNodeResponse>();
+
+        foreach (var (alias, nodeId) in SimulationFrontNodeIds.AliasToNodeId)
+        {
+            var node = await _repository.GetByNameAsync(nodeId, cancellationToken);
+            
+            result.Add(new NullableNodeResponse(
+                alias,
+                node?.Value
+            ));
+        }
+
+        _logger.LogDebug(
+            "Retrieved initial state for SimulationFront group: {Count} nodes",
+            result.Count);
+
+        return result;
     }
 }
