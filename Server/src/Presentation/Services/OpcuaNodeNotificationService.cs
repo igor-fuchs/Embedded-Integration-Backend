@@ -31,6 +31,6 @@ public sealed class OpcuaNodeNotificationService : IOpcuaNodeNotificationService
 
         await _hubContext.Clients
             .Group(SimulationFrontNodeIds.GroupName)
-            .SimulationFrontNodeUpdated(node);
+            .SimulationFrontNode(node);
     }
 }

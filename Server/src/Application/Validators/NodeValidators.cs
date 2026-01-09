@@ -15,8 +15,8 @@ public sealed class CreateNodeRequestValidator : AbstractValidator<CreateNodeReq
             .WithMessage("Node name is required.")
             .MaximumLength(256)
             .WithMessage("Node name must not exceed 256 characters.")
-            .Matches(@"^[a-zA-Z0-9_\-\.\=]+$")
-            .WithMessage("Node name can only contain letters, numbers, underscores, hyphens, dots, and equals signs.");
+            .Matches(@"^ns=\d+;s=""(.+)""$")
+            .WithMessage("Node name must follow OPC UA format: ns=<number>;s=\"<identifier>\"");
 
         RuleFor(x => x.Value)
             .Must(v => v.ValueKind != System.Text.Json.JsonValueKind.Undefined)

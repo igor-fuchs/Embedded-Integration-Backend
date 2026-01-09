@@ -26,5 +26,5 @@ public interface IOpcuaNodeHubClient
     /// Called when a separator station node is updated.
     /// This is sent only to clients subscribed to the SimulationFront group.
     /// </summary>
-    Task SimulationFrontNodeUpdated(NodeResponse node);
+    Task SimulationFrontNode(NodeResponse node);
 }
