@@ -71,10 +71,7 @@ public sealed class OpcuaNodeService : IOpcuaNodeService
         var response = NodeResponse.FromEntity(node);
 
         // Notify connected group clients
-        if (SimulationFrontNodeIds.IsSimulationFrontNode(node.Name))
-        {
-            await _notificationService.NotifySimulationFrontNodeAsync(response, cancellationToken);
-        }
+        await _notificationService.NotifySimulationFrontNodeAsync(response, cancellationToken);
 
         return response;
     }
@@ -98,10 +95,7 @@ public sealed class OpcuaNodeService : IOpcuaNodeService
         var response = NodeResponse.FromEntity(node);
 
         // Notify connected group clients
-        if (SimulationFrontNodeIds.IsSimulationFrontNode(node.Name))
-        {
-            await _notificationService.NotifySimulationFrontNodeAsync(response, cancellationToken);
-        }
+        await _notificationService.NotifySimulationFrontNodeAsync(response, cancellationToken);
 
         return response;
     }

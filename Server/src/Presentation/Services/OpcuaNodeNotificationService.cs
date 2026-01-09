@@ -25,12 +25,17 @@ public sealed class OpcuaNodeNotificationService : IOpcuaNodeNotificationService
     /// <inheritdoc/>
     public async Task NotifySimulationFrontNodeAsync(NodeResponse node, CancellationToken cancellationToken = default)
     {
+        if (!SimulationFrontNodeIds.IsSimulationFrontNode(node.Name)) return;
+        
+        // Map to alias name
+        NodeResponse response = new NodeResponse(SimulationFrontNodeIds.NodeIdToAlias[node.Name], node.Value);
+
         _logger.LogDebug(
-            "Notifying SimulationFront group of node update: ({NodeName})",
-            node.Name);
+            "Notifying SimulationFront group of node update: ({AliasName})",
+            response.Name);
 
         await _hubContext.Clients
             .Group(SimulationFrontNodeIds.GroupName)
-            .SimulationFrontNode(node);
+            .SimulationFrontNode(response);
     }
 }
