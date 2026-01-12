@@ -27,12 +27,14 @@ public static class SimulationFrontNodeIds
     public const string RobotLeftMovingToDrop = @"ns=3;s=""ST005_BUFFER_SHM"".""ROBOT_SHM"".""STATUS"".""DROP_POSITION""";
     public const string RobotLeftToPick = @"ns=3;s=""ST005_BUFFER_SHM"".""ROBOT_SHM"".""STATUS"".""PICK_POSITION""";
     public const string RobotLeftToAntecipation = @"ns=3;s=""ST005_BUFFER_SHM"".""ROBOT_SHM"".""STATUS"".""PART_DEPOSITED""";
+    public const string RobotLeftIsGrabbed = @"ns=3;s=""ST005_BUFFER_FB_IDB"".""ROBOT_FB"".""TurnOnGrab""";
 
     // Robot Right
     public const string RobotRightToHome = @"ns=3;s=""ST007_BUFFER_SHM"".""ROBOT_SHM"".""STATUS"".""HOME_POSITION""";
     public const string RobotRightMovingToDrop = @"ns=3;s=""ST007_BUFFER_SHM"".""ROBOT_SHM"".""STATUS"".""DROP_POSITION""";
     public const string RobotRightToPick = @"ns=3;s=""ST007_BUFFER_SHM"".""ROBOT_SHM"".""STATUS"".""PICK_POSITION""";
     public const string RobotRightToAntecipation = @"ns=3;s=""ST007_BUFFER_SHM"".""ROBOT_SHM"".""STATUS"".""PART_DEPOSITED""";
+    public const string RobotRightIsGrabbed = @"ns=3;s=""ST007_BUFFER_FB_IDB"".""ROBOT_FB"".""TurnOnGrab""";
 
     // Parts
     public const string CreateParts = @"ns=3;s=""ST005_BUFFER_FB_IDB"".""EMITTER_FB"".""R_TRIG_PartCreated"".Q";
