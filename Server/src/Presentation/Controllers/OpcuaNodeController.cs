@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 /// Controller for OPC UA node operations.
 /// </summary>
 [ApiController]
-[Route("opcua-nodes")]
+[Route("api/opcua-nodes")]
 [Produces("application/json")]
 public sealed class OpcuaNodeController : ControllerBase
 {
