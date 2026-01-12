@@ -21,15 +21,6 @@ public sealed record NodeResponse(
 }
 
 /// <summary>
-/// Response DTO for OPC UA node data with nullable value.
-/// Used for initial state where a node may not exist yet.
-/// </summary>
-public sealed record NullableNodeResponse(
-    string Name,
-    JsonElement? Value
-);
-
-/// <summary>
 /// Response DTO for a list of OPC UA nodes.
 /// </summary>
 public sealed record NodeListResponse(

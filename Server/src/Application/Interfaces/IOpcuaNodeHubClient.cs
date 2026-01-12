@@ -32,5 +32,5 @@ public interface IOpcuaNodeHubClient
     /// Called when a client subscribes to the SimulationFront group.
     /// Sends the initial state of all nodes in the group.
     /// </summary>
-    Task SimulationFrontInitialState(IReadOnlyList<NullableNodeResponse> nodes);
+    Task SimulationFrontInitialState(IReadOnlyList<NodeResponse> nodes);
 }

@@ -20,5 +20,5 @@ public interface IOpcuaNodeNotificationService
     /// </summary>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>List of all SimulationFront nodes with their current values.</returns>
-    Task<IReadOnlyList<NullableNodeResponse>> GetSimulationFrontInitialStateAsync(CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<NodeResponse>> GetSimulationFrontInitialStateAsync(CancellationToken cancellationToken = default);
 }

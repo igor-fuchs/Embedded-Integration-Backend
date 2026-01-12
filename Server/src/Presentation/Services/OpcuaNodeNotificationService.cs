@@ -1,5 +1,6 @@
 namespace Presentation.Services;
 
+using System.Text.Json;
 using Application.DTOs.Responses;
 using Application.Interfaces;
 using Domain.Constants;
@@ -43,17 +44,25 @@ public sealed class OpcuaNodeNotificationService : IOpcuaNodeNotificationService
     }
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<NullableNodeResponse>> GetSimulationFrontInitialStateAsync(CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<NodeResponse>> GetSimulationFrontInitialStateAsync(CancellationToken cancellationToken = default)
     {
-        var result = new List<NullableNodeResponse>();
+        var result = new List<NodeResponse>();
 
         foreach (var (alias, nodeId) in SimulationFrontNodeIds.AliasToNodeId)
         {
             var node = await _repository.GetByNameAsync(nodeId, cancellationToken);
+
+            // Default to false if node or value is missing
+            JsonElement value = JsonDocument.Parse("false").RootElement;
+
+            if(node?.Value != null)
+            {
+                value = node.Value;
+            }
             
-            result.Add(new NullableNodeResponse(
+            result.Add(new NodeResponse(
                 alias,
-                node?.Value
+                value
             ));
         }
 
