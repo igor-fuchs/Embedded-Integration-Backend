@@ -1,6 +1,7 @@
 namespace Infrastructure;
 
 using Application.Interfaces;
+using Infrastructure.Providers;
 using Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +11,7 @@ public static class DependencyInjection
     {
         services.AddMemoryCache();
         services.AddSingleton<IOpcuaNodeRepository, OpcuaNodeCacheRepository>();
+        services.AddSingleton<ISimulationFrontNodeProvider, SimulationFrontNodeProvider>();
 
         return services;
     }

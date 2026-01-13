@@ -1,7 +1,6 @@
 namespace Presentation.Hubs;
 
 using Application.Interfaces;
-using Domain.Constants;
 using Microsoft.AspNetCore.SignalR;
 
 /// <summary>
@@ -11,13 +10,16 @@ public sealed class OpcuaNodeHub : Hub<IOpcuaNodeHubClient>
 {
     private readonly ILogger<OpcuaNodeHub> _logger;
     private readonly IOpcuaNodeNotificationService _notificationService;
+    private readonly ISimulationFrontNodeProvider _nodeProvider;
 
     public OpcuaNodeHub(
         ILogger<OpcuaNodeHub> logger,
-        IOpcuaNodeNotificationService notificationService)
+        IOpcuaNodeNotificationService notificationService,
+        ISimulationFrontNodeProvider nodeProvider)
     {
         _logger = logger;
         _notificationService = notificationService;
+        _nodeProvider = nodeProvider;
     }
 
     public override async Task OnConnectedAsync()
@@ -38,11 +40,11 @@ public sealed class OpcuaNodeHub : Hub<IOpcuaNodeHubClient>
     /// </summary>
     public async Task SubscribeToSimulationFront()
     {
-        await Groups.AddToGroupAsync(Context.ConnectionId, SimulationFrontNodeIds.GroupName);
+        await Groups.AddToGroupAsync(Context.ConnectionId, _nodeProvider.GroupName);
         _logger.LogInformation(
             "Client {ConnectionId} subscribed to {GroupName} group",
             Context.ConnectionId,
-            SimulationFrontNodeIds.GroupName);
+            _nodeProvider.GroupName);
 
         // Send initial state to the newly subscribed client
         var initialState = await _notificationService.GetSimulationFrontInitialStateAsync();
@@ -59,11 +61,11 @@ public sealed class OpcuaNodeHub : Hub<IOpcuaNodeHubClient>
     /// </summary>
     public async Task UnsubscribeFromSimulationFront()
     {
-        await Groups.RemoveFromGroupAsync(Context.ConnectionId, SimulationFrontNodeIds.GroupName);
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, _nodeProvider.GroupName);
         _logger.LogInformation(
             "Client {ConnectionId} unsubscribed from {GroupName} group",
             Context.ConnectionId,
-            SimulationFrontNodeIds.GroupName);
+            _nodeProvider.GroupName);
     }
 }
 

@@ -5,7 +5,6 @@ using Application.DTOs.Responses;
 using Application.Interfaces;
 using Domain.Entities;
 using Domain.Exceptions;
-using Domain.Constants;
 
 /// <summary>
 /// Application service for OPC UA node operations.

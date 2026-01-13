@@ -7,7 +7,7 @@ using Presentation.Middleware;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddPresentation();
-builder.Services.AddApplication();
+builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure();
 
 builder.Services.AddCors(options =>

@@ -3,7 +3,6 @@ namespace Presentation.Services;
 using System.Text.Json;
 using Application.DTOs.Responses;
 using Application.Interfaces;
-using Domain.Constants;
 using Microsoft.AspNetCore.SignalR;
 using Presentation.Hubs;
 
@@ -14,32 +13,35 @@ public sealed class OpcuaNodeNotificationService : IOpcuaNodeNotificationService
 {
     private readonly IHubContext<OpcuaNodeHub, IOpcuaNodeHubClient> _hubContext;
     private readonly IOpcuaNodeRepository _repository;
+    private readonly ISimulationFrontNodeProvider _nodeProvider;
     private readonly ILogger<OpcuaNodeNotificationService> _logger;
 
     public OpcuaNodeNotificationService(
         IHubContext<OpcuaNodeHub, IOpcuaNodeHubClient> hubContext,
         IOpcuaNodeRepository repository,
+        ISimulationFrontNodeProvider nodeProvider,
         ILogger<OpcuaNodeNotificationService> logger)
     {
         _hubContext = hubContext;
         _repository = repository;
+        _nodeProvider = nodeProvider;
         _logger = logger;
     }
 
     /// <inheritdoc/>
     public async Task NotifySimulationFrontNodeAsync(NodeResponse node, CancellationToken cancellationToken = default)
     {
-        if (!SimulationFrontNodeIds.IsSimulationFrontNode(node.Name)) return;
+        if (!_nodeProvider.IsSimulationFrontNode(node.Name)) return;
         
         // Map to alias name
-        NodeResponse response = new NodeResponse(SimulationFrontNodeIds.NodeIdToAlias[node.Name], node.Value);
+        NodeResponse response = new NodeResponse(_nodeProvider.NodeIdToAlias[node.Name], node.Value);
 
         _logger.LogDebug(
             "Notifying SimulationFront group of node update: ({AliasName})",
             response.Name);
 
         await _hubContext.Clients
-            .Group(SimulationFrontNodeIds.GroupName)
+            .Group(_nodeProvider.GroupName)
             .SimulationFrontNode(response);
     }
 
@@ -48,7 +50,7 @@ public sealed class OpcuaNodeNotificationService : IOpcuaNodeNotificationService
     {
         var result = new List<NodeResponse>();
 
-        foreach (var (alias, nodeId) in SimulationFrontNodeIds.AliasToNodeId)
+        foreach (var (alias, nodeId) in _nodeProvider.AliasToNodeId)
         {
             var node = await _repository.GetByNameAsync(nodeId, cancellationToken);
 
