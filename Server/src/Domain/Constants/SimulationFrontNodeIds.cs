@@ -37,7 +37,7 @@ public static class SimulationFrontNodeIds
     public const string RobotRightIsGrabbed = @"ns=3;s=""ST007_BUFFER_FB_IDB"".""ROBOT_FB"".""TurnOnGrab""";
 
     // Parts
-    public const string CreateParts = @"ns=3;s=""ST005_BUFFER_FB_IDB"".""EMITTER_FB"".""R_TRIG_PartCreated"".Q";
+    public const string CreateParts = @"ns=3;s=""ST005_BUFFER_SHM"".""EMITTER_SHM"".""SENSOR_STATUS";
 
     #endregion
 
