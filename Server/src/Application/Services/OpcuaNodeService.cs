@@ -3,8 +3,10 @@ namespace Application.Services;
 using Application.DTOs.Requests;
 using Application.DTOs.Responses;
 using Application.Interfaces;
+using Application.Options;
 using Domain.Entities;
 using Domain.Exceptions;
+using Microsoft.Extensions.Options;
 
 /// <summary>
 /// Application service for OPC UA node operations.
@@ -14,22 +16,32 @@ public sealed class OpcuaNodeService : IOpcuaNodeService
     private readonly IOpcuaNodeRepository _repository;
     private readonly IValidationService _validator;
     private readonly IOpcuaNodeNotificationService _notificationService;
+    private readonly SimulationFrontOptions _simulationFrontOptions;
     private const int MaxNodes = 100;
 
     public OpcuaNodeService(
         IOpcuaNodeRepository repository,
         IValidationService validator,
-        IOpcuaNodeNotificationService notificationService)
+        IOpcuaNodeNotificationService notificationService,
+        IOptions<SimulationFrontOptions> simulationFrontOptions)
     {
         _repository = repository;
         _validator = validator;
         _notificationService = notificationService;
+        _simulationFrontOptions = simulationFrontOptions.Value;
     }
 
-    public async Task<NodeListResponse> GetAllNodesAsync(CancellationToken cancellationToken = default)
+    public async Task<NodeListResponse> GetRegisteredNodesAsync(CancellationToken cancellationToken = default)
     {
         var nodes = await _repository.GetAllAsync(cancellationToken);
         return NodeListResponse.FromEntities(nodes);
+    }
+
+    public Task<NodesNameListResponse> GetNodesNameAsync(CancellationToken cancellationToken = default)
+    {
+        var nodeNames = _simulationFrontOptions.Nodes.Values.ToList();
+        var response = new NodesNameListResponse(nodeNames, nodeNames.Count);
+        return Task.FromResult(response);
     }
 
     public async Task<NodeResponse> GetNodeByNameAsync(string name, CancellationToken cancellationToken = default)

@@ -34,3 +34,11 @@ public sealed record NodeListResponse(
         return new NodeListResponse(nodeList, nodeList.Count);
     }
 }
+
+/// <summary>
+/// Response DTO for a list of OPC UA node names from configuration.
+/// </summary>
+public sealed record NodesNameListResponse(
+    IReadOnlyList<string> NodesName,
+    int TotalCount
+);
