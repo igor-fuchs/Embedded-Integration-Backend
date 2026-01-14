@@ -36,11 +36,11 @@ public sealed class OpcuaNodeController : ControllerBase
     /// Gets the names of all registered OPC UA nodes from configuration.
     /// </summary>
     /// <response code="200">Returns the list of node names</response>
-    [HttpGet("nodes-name")]
-    [ProducesResponseType(typeof(NodesNameListResponse), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetNodesName(CancellationToken cancellationToken)
+    [HttpGet("node-names")]
+    [ProducesResponseType(typeof(NodeNamesListResponse), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetNodeNames(CancellationToken cancellationToken)
     {
-        var result = await _nodeService.GetNodesNameAsync(cancellationToken);
+        var result = await _nodeService.GetNodeNamesAsync(cancellationToken);
         return Ok(result);
     }
 

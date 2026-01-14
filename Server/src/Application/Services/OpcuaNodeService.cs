@@ -37,10 +37,10 @@ public sealed class OpcuaNodeService : IOpcuaNodeService
         return NodeListResponse.FromEntities(nodes);
     }
 
-    public Task<NodesNameListResponse> GetNodesNameAsync(CancellationToken cancellationToken = default)
+    public Task<NodeNamesListResponse> GetNodeNamesAsync(CancellationToken cancellationToken = default)
     {
         var nodeNames = _simulationFrontOptions.Nodes.Values.ToList();
-        var response = new NodesNameListResponse(nodeNames, nodeNames.Count);
+        var response = new NodeNamesListResponse(nodeNames, nodeNames.Count);
         return Task.FromResult(response);
     }
 

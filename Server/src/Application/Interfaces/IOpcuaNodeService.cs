@@ -9,7 +9,7 @@ using Application.DTOs.Responses;
 public interface IOpcuaNodeService
 {
     Task<NodeListResponse> GetRegisteredNodesAsync(CancellationToken cancellationToken = default);
-    Task<NodesNameListResponse> GetNodesNameAsync(CancellationToken cancellationToken = default);
+    Task<NodeNamesListResponse> GetNodeNamesAsync(CancellationToken cancellationToken = default);
     Task<NodeResponse> GetNodeByNameAsync(string name, CancellationToken cancellationToken = default);
     Task<NodeResponse> CreateNodeAsync(CreateNodeRequest request, CancellationToken cancellationToken = default);
     Task<NodeResponse> UpdateNodeAsync(string name, UpdateNodeRequest request, CancellationToken cancellationToken = default);
