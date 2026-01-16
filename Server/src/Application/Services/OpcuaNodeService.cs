@@ -1,7 +1,7 @@
 namespace Application.Services;
 
-using Application.DTOs.Requests;
-using Application.DTOs.Responses;
+using Domain.DTOs.Requests;
+using Domain.DTOs.Responses;
 using Application.Interfaces;
 using Application.Options;
 using Domain.Entities;

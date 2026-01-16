@@ -1,4 +1,4 @@
-namespace Application.DTOs.Requests;
+namespace Domain.DTOs.Requests;
 
 using System.Text.Json;
 

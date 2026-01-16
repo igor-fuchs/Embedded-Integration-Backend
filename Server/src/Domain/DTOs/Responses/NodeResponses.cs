@@ -1,4 +1,4 @@
-namespace Application.DTOs.Responses;
+namespace Domain.DTOs.Responses;
 
 using System.Text.Json;
 using Domain.Entities;

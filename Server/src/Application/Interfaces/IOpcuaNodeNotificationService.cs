@@ -1,6 +1,6 @@
 namespace Application.Interfaces;
 
-using Application.DTOs.Responses;
+using Domain.DTOs.Responses;
 
 /// <summary>
 /// Interface for notifying clients about OPC UA node changes via real-time communication.

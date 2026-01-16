@@ -1,7 +1,7 @@
 namespace Presentation.Controllers;
 
-using Application.DTOs.Requests;
-using Application.DTOs.Responses;
+using Domain.DTOs.Requests;
+using Domain.DTOs.Responses;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

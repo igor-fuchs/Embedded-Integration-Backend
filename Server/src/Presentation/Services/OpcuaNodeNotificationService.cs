@@ -1,7 +1,7 @@
 namespace Presentation.Services;
 
 using System.Text.Json;
-using Application.DTOs.Responses;
+using Domain.DTOs.Responses;
 using Application.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 using Presentation.Hubs;

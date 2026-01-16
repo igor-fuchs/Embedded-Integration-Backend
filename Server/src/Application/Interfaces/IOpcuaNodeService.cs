@@ -1,7 +1,7 @@
 namespace Application.Interfaces;
 
-using Application.DTOs.Requests;
-using Application.DTOs.Responses;
+using Domain.DTOs.Requests;
+using Domain.DTOs.Responses;
 
 /// <summary>
 /// Interface for OPC UA node service operations.
