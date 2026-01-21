@@ -4,6 +4,7 @@ using Domain.DTOs.Requests;
 using Domain.DTOs.Responses;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 /// <summary>
 /// Controller for OPC UA node operations.
@@ -116,5 +117,24 @@ public sealed class OpcuaNodeController : ControllerBase
     {
         await _nodeService.DeleteNodeAsync(name, cancellationToken);
         return NoContent();
+    }
+
+    /// <summary>
+    /// Gets commands from the front-end.
+    /// Currently returns temporary/mock data.
+    /// </summary>
+    /// <response code="200">Returns the list of commands</response>
+    [HttpGet("commands-front")]
+    [ProducesResponseType(typeof(CommandListResponse), StatusCodes.Status200OK)]
+    public IActionResult GetCommandsFront()
+    {
+        var result = new CommandListResponse(
+            new List<CommandResponse>
+            {
+                new("ns=3;s=\"ST010_SEPARATOR_FB_IDB\".\"ACTUATOR_A_FB\".\"CommandAdvance\"", "TRUE")
+            },
+            1
+        );
+        return Ok(result);
     }
 }
