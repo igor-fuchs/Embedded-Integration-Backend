@@ -4,7 +4,6 @@ using Domain.DTOs.Requests;
 using Domain.DTOs.Responses;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 
 /// <summary>
 /// Controller for OPC UA node operations.

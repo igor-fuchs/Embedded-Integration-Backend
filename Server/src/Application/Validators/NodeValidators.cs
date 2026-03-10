@@ -2,6 +2,7 @@ namespace Application.Validators;
 
 using Domain.DTOs.Requests;
 using FluentValidation;
+using System.Text.Json;
 
 /// <summary>
 /// Validator for CreateNodeRequest.
@@ -19,9 +20,14 @@ public sealed class CreateNodeRequestValidator : AbstractValidator<CreateNodeReq
             .WithMessage("Node name must follow OPC UA format: ns=<number>;s=\"<identifier>\"");
 
         RuleFor(x => x.Value)
-            .Must(v => v.ValueKind != System.Text.Json.JsonValueKind.Undefined)
-            .WithMessage("Node value is required.");
+            .Must(v => v.ValueKind != JsonValueKind.Undefined)
+            .WithMessage("Node value is required.")
+            .Must(BeBoolean)
+            .WithMessage("Node value must be a boolean (true or false).");
     }
+
+    private static bool BeBoolean(JsonElement value) =>
+        value.ValueKind is JsonValueKind.True or JsonValueKind.False;
 }
 
 /// <summary>
@@ -32,7 +38,9 @@ public sealed class UpdateNodeRequestValidator : AbstractValidator<UpdateNodeReq
     public UpdateNodeRequestValidator()
     {
         RuleFor(x => x.Value)
-            .Must(v => v.ValueKind != System.Text.Json.JsonValueKind.Undefined)
-            .WithMessage("Node value is required.");
+            .Must(v => v.ValueKind != JsonValueKind.Undefined)
+            .WithMessage("Node value is required.")
+            .Must(v => v.ValueKind is JsonValueKind.True or JsonValueKind.False)
+            .WithMessage("Node value must be a boolean (true or false).");
     }
 }
