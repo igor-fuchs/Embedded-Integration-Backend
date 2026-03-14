@@ -47,6 +47,16 @@ It acts as the **single source of truth** between:
                                 └──────────────────────────────────────────────────┘
 ```
 
+<div align="center">
+
+**Part of the Embedded Integration project ecosystem**
+
+[Frontend Repository](https://github.com/igor-fuchs/Embedded-Integration-Frontend) • [Bridge Repository](https://github.com/igor-fuchs/Embedded-Integration-Bridge)
+
+</div>
+
+---
+
 ## 🏗️ Architecture
 
 The project follows **Clean Architecture** with four distinct layers:
@@ -205,11 +215,3 @@ This project is for educational and demonstration purposes.
 - LinkedIn: [Igor Fuchs Pereira](www.linkedin.com/in/igor-fuchs-pereira)
 
 ---
-
-<div align="center">
-
-**Part of the Embedded Integration project ecosystem**
-
-[Frontend Repository](https://github.com/igor-fuchs/Embedded-Integration-Frontend) • [Bridge Repository](https://github.com/igor-fuchs/Embedded-Integration-Bridge)
-
-</div>
